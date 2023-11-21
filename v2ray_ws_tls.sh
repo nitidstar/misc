@@ -143,10 +143,11 @@ EOF
 install_v2ray(){
     
     yum install -y wget
-    bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
-    cd /usr/local/etc/v2ray
+    bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)  
+    mkdir -p /usr/local/etc/v2ray
+    cd /usr/local/etc/v2ray/
     rm -f config.json
-    wget https://raw.githubusercontent.com/atrandys/v2ray-ws-tls/master/config.json
+    wget https://raw.githubusercontent.com/luyiming1016/ladderbackup/master/config.json
     v2uuid=$(cat /proc/sys/kernel/random/uuid)
     sed -i "s/aaaa/$v2uuid/;" config.json
     newpath=$(cat /dev/urandom | head -1 | md5sum | head -c 4)
@@ -211,8 +212,8 @@ remove_v2ray(){
     systemctl stop v2ray.service
     systemctl disable v2ray.service
     
-    rm -rf /usr/bin/v2ray /etc/v2ray
-    rm -rf /etc/v2ray
+    rm -rf /usr/bin/v2ray /usr/local/etc/v2ray
+    rm -rf /usr/local/etc/v2ray
     rm -rf /etc/nginx
     
     green "nginx、v2ray已删除"
@@ -224,7 +225,7 @@ start_menu(){
     green " ===================================="
     green " 介绍：一键安装v2ray+ws+tls           "
     green " 系统：centos7                       "
-    green " 作者：A                      "
+    green " 作者：atrandys， Udy                      "
     green " ===================================="
     echo
     green " 1. 安装v2ray+ws+tls"
@@ -239,7 +240,7 @@ start_menu(){
     install_v2ray
     ;;
     2)
-    bash <(curl -L -s https://install.direct/go.sh)  
+    bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)  
     ;;
     3)
     remove_v2ray 
