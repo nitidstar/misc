@@ -12,7 +12,10 @@
 - profiler.sh： cpp 性能分析，利用gdb周期抓栈统计性能
 - jprofiler.sh： java 性能分析，利用gdb周期抓栈统计性能
 
-## v2ray_port  
+## v2ray_port
+### v2ray
+- v2ray_ws_tls.sh： 一键部署 v2ray+nginx+websocket
+
 ### nginx
 - nginx_port.sh： 配置到cron job，每天修改端口
 - nginx_cert.sh： 配置到cron job，每两个月更新tls证书
