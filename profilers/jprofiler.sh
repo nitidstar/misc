@@ -1,6 +1,6 @@
 # Original version: http://blog.tsunanet.net/2010/08/jpmp-javas-poor-mans-profiler.html
 
-# Usage: ./jpmp.sh <pid> <num-samples> <sleep-time-between-samples>
+# Usage: ./jprofiler.sh <pid> <num-samples> <sleep-time-between-samples>
 
 #!/bin/bash
 pid=$1
