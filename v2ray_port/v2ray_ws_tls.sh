@@ -35,10 +35,12 @@ function yellow(){
 install_nginx(){
     systemctl stop firewalld
     systemctl disable firewalld
+    yum install -y nginx
+    res=$(command -v nginx)
     yum install -y libtool perl-core zlib-devel gcc wget pcre* unzip
     wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1a.tar.gz
     tar xzvf openssl-1.1.1a.tar.gz
-    
+
     mkdir /etc/nginx
     mkdir /etc/nginx/ssl
     mkdir /etc/nginx/conf.d
@@ -47,7 +49,7 @@ install_nginx(){
     cd nginx-1.15.8
     ./configure --prefix=/etc/nginx --with-openssl=../openssl-1.1.1a --with-openssl-opt='enable-tls1_3' --with-http_v2_module --with-http_ssl_module --with-http_gzip_static_module --with-http_stub_status_module --with-http_sub_module --with-stream --with-stream_ssl_module
     make && make install
-    
+
     green "======================"
     green " 输入解析到此VPS的域名"
     green "======================"
@@ -103,10 +105,10 @@ EOF
         --reloadcmd  "/etc/nginx/sbin/nginx -s reload"
 	
 cat > /etc/nginx/conf.d/default.conf<<-EOF
-server { 
+server {
     listen       80;
     server_name  $domain;
-    rewrite ^(.*)$  https://\$host\$1 permanent; 
+    rewrite ^(.*)$  https://\$host\$1 permanent;
 }
 server {
     listen 443 ssl http2;
@@ -127,11 +129,14 @@ server {
     #access_log /var/log/nginx/access.log combined;
     location /mypath {
         proxy_redirect off;
-        proxy_pass http://127.0.0.1:11234; 
+        proxy_pass http://127.0.0.1:11234;
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection "upgrade";
         proxy_set_header Host \$http_host;
+        # Show real IP in v2ray access.log
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
     location / {
        try_files \$uri \$uri/ /index.php?\$args;
@@ -141,16 +146,18 @@ EOF
 }
 #安装v2ray
 install_v2ray(){
-    
+
     yum install -y wget
     bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)  
     mkdir -p /usr/local/etc/v2ray
     cd /usr/local/etc/v2ray/
     rm -f config.json
     wget https://raw.githubusercontent.com/luyiming1016/ladderbackup/master/config.json
-    v2uuid=$(cat /proc/sys/kernel/random/uuid)
+#    v2uuid=$(cat /proc/sys/kernel/random/uuid)
+    v2uuid=b16dde59-7c20-43b7-a557-8c6bb55f935c
     sed -i "s/aaaa/$v2uuid/;" config.json
-    newpath=$(cat /dev/urandom | head -1 | md5sum | head -c 4)
+#    newpath=$(cat /dev/urandom | head -1 | md5sum | head -c 4)
+    newpath=3b71
     sed -i "s/mypath/$newpath/;" config.json
     sed -i "s/mypath/$newpath/;" /etc/nginx/conf.d/default.conf
     cd /etc/nginx/html
