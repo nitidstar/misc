@@ -220,8 +220,8 @@ install_v2ray(){
 
     cd /etc/nginx/html
     rm -rf /etc/nginx/html/*
-#    wget https://raw.githubusercontent.com/nitidstar/misc/master/web.zip
-    wget https://github.com/atrandys/v2ray-ws-tls/raw/master/web.zip
+#    wget https://github.com/atrandys/v2ray-ws-tls/raw/master/web.zip
+    wget https://raw.githubusercontent.com/nitidstar/misc/master/web.zip
     unzip web.zip
 
     /etc/nginx/sbin/nginx -s stop
