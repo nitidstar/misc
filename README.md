@@ -14,7 +14,8 @@
 
 ## v2ray_port
 ### v2ray
-- v2ray_ws_tls.sh： 一键部署 v2ray+nginx+websocket
+- v2ray_ws_tls.sh： 一键部署 v2ray+nginx+websocket，来源与网上，备忘用
+- new_v2ray_ws_tls.sh： 改进版，直接 yum 安装nginx，固定uuid和path
 
 ### nginx
 - nginx_port.sh： 配置到cron job，每天修改端口
