@@ -1,8 +1,8 @@
 {
   "log": {
-    "access": "",
-    "error": "",
-    "loglevel": "warning"
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "info"
   },
   "inbounds": [
     {
@@ -57,7 +57,6 @@
               {
                 "id": "b16dde59-7c20-43b7-a557-8c6bb55f935c",
                 "alterId": 0,
-                "email": "t@t.tt",
                 "security": "auto"
               }
             ]
@@ -96,12 +95,6 @@
       }
     }
   ],
-  "dns": {
-    "servers": [
-      "1.1.1.1",
-      "8.8.8.8"
-    ]
-  },
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [
@@ -110,42 +103,53 @@
         "inboundTag": [
           "api"
         ],
-        "outboundTag": "api"
+        "outboundTag": "api",
+        "enabled": true
       },
       {
+        "id": "5759373009711700859",
         "type": "field",
         "outboundTag": "direct",
         "domain": [
           "domain:example-example.com",
           "domain:example-example2.com"
-        ]
+        ],
+        "enabled": true
       },
       {
+        "id": "4911287415423231643",
         "type": "field",
         "outboundTag": "block",
         "domain": [
           "geosite:category-ads-all"
-        ]
+        ],
+        "enabled": true
       },
       {
+        "id": "5538775034247655367",
         "type": "field",
         "outboundTag": "direct",
         "domain": [
           "geosite:cn"
-        ]
+        ],
+        "enabled": true
       },
       {
+        "id": "4879539077980427278",
         "type": "field",
         "outboundTag": "direct",
         "ip": [
           "geoip:private",
           "geoip:cn"
-        ]
+        ],
+        "enabled": true
       },
       {
+        "id": "5239737603647468852",
         "type": "field",
         "port": "0-65535",
-        "outboundTag": "proxy"
+        "outboundTag": "proxy",
+        "enabled": true
       }
     ]
   }
