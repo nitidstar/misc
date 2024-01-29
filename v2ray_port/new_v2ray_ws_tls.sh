@@ -71,30 +71,35 @@ install() {
   yum install -y wget
   yum install -y python3
   yum install -y nginx
-  mkdir -p /etc/nginx/ssl
   bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
   systemctl enable v2ray
 }
 
 remove() {
-  nginx -s stop
+  systemctl stop nginx
+  systemctl disable nginx.service
   yum -y remove nginx
+  rm -rf /etc/nginx
+
   systemctl stop v2ray.service
   systemctl disable v2ray.service
-
   rm -rf /usr/local/bin/v2ray
   rm -rf /usr/local/share/v2ray
   rm -rf /usr/local/etc/v2ray
 }
 
 config() {
-  nginx
+  mkdir -p /etc/nginx/conf
+  mkdir -p /etc/nginx/conf.d
+  mkdir -p /etc/nginx/html
+
   green " 输入域名:"
   read domain
+
   cd "$(dirname "$0")"
   ./nginx.sh $domain
-  ./nginx_cert.sh $domain
-  ./v2ray_server.sh $domain
+  ./nginx_cert.sh $domain start
+  ./v2ray_server.sh $domain start
 }
 
 deploy() {

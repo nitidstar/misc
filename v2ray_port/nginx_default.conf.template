@@ -1,5 +1,5 @@
 server {
-    listen       10101;
+    listen       10000;
     server_name  {{ domain }};
     charset utf-8;
     root    /opt/data/nginx;             # 文件存放目录
@@ -31,6 +31,9 @@ server {
         postpone_output 2048;                 # 当缓冲区的数据达到2048B时再向客户端发送
         chunked_transfer_encoding on;         # 启用分块传输标识
     }
+    location = /favicon.ico {
+        root  /etc/nginx/html/favicon;
+    }
 }
 
 server {
@@ -38,8 +41,8 @@ server {
     server_name {{ domain }};
     root /etc/nginx/html;
     index index.php index.html;
-    ssl_certificate /etc/nginx/ssl/fullchain.cer;
-    ssl_certificate_key /etc/nginx/ssl/{{ domain }}.key;
+    ssl_certificate     /etc/nginx/conf/{{ domain }}.crt;
+    ssl_certificate_key /etc/nginx/conf/{{ domain }}.key;
     #TLS 版本控制
     ssl_protocols   TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
     ssl_ciphers     'TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-GCM-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5';
@@ -48,6 +51,8 @@ server {
     ssl_early_data  on;
     ssl_stapling on;
     ssl_stapling_verify on;
+    resolver 8.8.8.8 8.8.4.4 valid=300s;
+    resolver_timeout 10s;
     #add_header Strict-Transport-Security "max-age=31536000";
     #access_log /var/log/nginx/access.log combined;
     location /{{ path }} {
@@ -60,6 +65,9 @@ server {
         # Show real IP in v2ray access.log
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    location = /favicon.ico {
+        root  /etc/nginx/html/favicon;
     }
     location / {
        try_files $uri $uri/ /index.php?$args;
