@@ -91,14 +91,24 @@ remove() {
 config() {
   mkdir -p /etc/nginx/conf
   mkdir -p /etc/nginx/conf.d
-  mkdir -p /etc/nginx/html
+  mkdir -p /opt/data/nginx
+
+  cd /usr/share/nginx/html && rm -f *
+  wget https://github.com/nitidstar/misc/raw/master/v2ray_port/web.zip
+  unzip web.zip
+  cd -
+
+  # 1. 先启动nginx，nginx_cert.sh申请证书需要访问nginx
+  systemctl start nginx
 
   green " 输入域名:"
   read domain
 
+  # 2. 生成nginx配置，此时还没有证书，所以nginx必须在此之前启动，否则启动会失败
   cd "$(dirname "$0")"
   ./nginx.sh $domain
-  ./nginx_cert.sh $domain start
+  # 3. 申请证书，此时nginx所有配置完成，可以重启
+  ./nginx_cert.sh $domain restart
   ./v2ray_server.sh $domain start
 }
 
