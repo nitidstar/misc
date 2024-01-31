@@ -57,13 +57,12 @@ SETTINGS = {
 
 def get_setting(argv):
     today = datetime.date.today()
-    port = '1{:02d}{:02d}'.format(today.month, today.day)
     target = argv[1]
     setting = SETTINGS[target]
     setting['directory'] = argv[2]
     params = {}
     params['domain'] = argv[3]
-    params['port'] = port
+    params['port'] = argv[4]
     params['id'] = ID
     params['path'] = PATH
 
