@@ -10,7 +10,7 @@
 
 ## ./profiler
 - profiler.sh： cpp 性能分析，利用gdb周期抓栈统计性能
-- jprofiler.sh： java 性能分析，利用gdb周期抓栈统计性能
+- jprofiler.sh： java 性能分析，利用jdb周期抓栈统计性能
 
 ## ./v2ray_port
 ### v2ray
