@@ -72,7 +72,6 @@ install() {
   yum install -y python3
   yum install -y nginx
   bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
-  systemctl enable v2ray
 }
 
 remove() {
@@ -110,6 +109,9 @@ config() {
   # 3. 申请证书，此时nginx所有配置完成，可以重启
   ./nginx_cert.sh $domain restart
   ./v2ray_server.sh $domain start
+
+  systemctl enable nginx
+  systemctl enable v2ray
 }
 
 deploy() {

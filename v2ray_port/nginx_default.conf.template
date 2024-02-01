@@ -45,9 +45,9 @@ server {
         default_type application/octet-stream;# 将当前目录中所有文件的默认MIME类型设置为
                                               # application/octet-stream
 
-        if ($request_filename ~* ^.*?\.(txt|doc|pdf|rar|gz|zip|docx|exe|xlsx|ppt|pptx)$){
+        if ($request_filename ~* /opt/data/nginx/(.*)$){
             # 当文件格式为上述格式时，将头字段属性Content-Disposition的值设置为"attachment"
-            add_header Content-Disposition: 'attachment;';
+            add_header Content-disposition 'attachment; filename=$1';
         }
         sendfile on;                          # 开启零复制文件传输功能
         sendfile_max_chunk 1m;                # 每个sendfile调用的最大传输量为1MB
