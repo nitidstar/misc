@@ -97,18 +97,18 @@ config() {
   unzip web.zip
   cd -
 
-  # 1. 先启动nginx，nginx_cert.sh申请证书需要访问nginx
-  systemctl start nginx
-
   green " 输入域名:"
   read domain
 
-  # 2. 生成nginx配置，此时还没有证书，所以nginx必须在此之前启动，否则启动会失败
+  # 1. 生成nginx配置
   cd "$(dirname "$0")"
   ./nginx.sh $domain
-  # 3. 申请证书，此时nginx所有配置完成，可以重启
-  ./nginx_cert.sh $domain restart
-  ./v2ray_server.sh $domain start
+
+  # 2. nginx安装证书 & 启动
+  ./nginx_cert.sh $domain
+
+  # 3. 生成v2ray配置 & 启动
+  ./v2ray_server.sh $domain
 
   systemctl enable nginx
   systemctl enable v2ray
